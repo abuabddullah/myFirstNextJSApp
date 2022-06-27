@@ -1,0 +1,207 @@
+nextjs crush course by Istiaq hasan : https://www.youtube.com/watch?v=I4O9Of7rFSM
+
+
+১. 8:22 - Make NextJS Project : " npx create-next-app my-app " command দিয়ে একটা nextjs app বানাতে হবে
+
+২. 9:09 - Project Files & Folders : 
+            => pages/_app.js ফাইল টাই মূলত react এর index.js এর কাজ করে। 
+            => pages/index.js ফাইল টাই মূলত react এর App.js এর কাজ করে। 
+            => styles/globals.css file এ যেসব css লিখব তা যেকোণ component থেকে access করা যাবে
+            => styles/Home.Module.css file এ যেসব css লিখব তা কেবল মাত্র Home component থেকে access করা যাবে অর্থাৎ .module.css extension টার মাধ্যমে আমরা css ফাইলে একটা নির্দিষ্ট component এর জন্য fixed করে দিতে পারি,
+
+৩. 12:12 - Static Page Routing :
+            => nextjs এ কোন routing library use করতে হয় না এর default routing system হচ্ছে pages folder এ যদি আমরা কোন file or folder create করি তাহলে তা automatic একেক্টা routing generate করে like, pages/posts.js file create করলে browser pages/posts.js route automatic generate হবে
+            => nextjs এ default 404 not found page থাকে
+
+৪. 15:08 - file and component naming rules : *************************
+            => nextjs এ কোন file/folder naming করার সময় camelCase use করতে হয় আর rsc দিয়ে component create করার সময় component এর name capital letter দিয়ে শুরু করতে হয়
+
+৫. 16:32 - Dynamic Page Routing(I) by useRouter :
+            => dynamic routing করার  জন্য আমাদের pages folder এর ভিতর outlet folder বানাতে হবে এবং তার ভিতরে একটা dynamic file বানাতে হবে। dynamic file টাই মুলত সেই component যেটা id parameter এর  সাথে সাথে change হ্যে হয়ে UI তে দেখাবে। so structure will be like, 
+
+                        pages/dynamicRoutes/[id].js
+
+            => এবার আমাদের কে সেই dynamic component([id].js) এ গিয়ে useRouter hook ব্যবহার করে তার ভিতরের query থেকে id টাকে বের করে এনে বাকি কাজ করতে হবে অনেকটা react এর  useParams hook এর মত,
+
+                    const router = useRouter();
+                    console.log('router',router);
+                    const { id } = router.query;
+
+            => আরো একটা way আছে dynamic routing এর জন্য সেটা 45:10 min এ দেখানো হয়েছে . follow point : 12
+
+৬. 27:39 - install bootstra :
+            => bootstrap কে  install করে তাকে  _app.js file এ import করতে হবে,
+
+৭. Next js এ Link anchor  :
+            => structure :
+                    <Link href="/path"><a>Path</a></Link>
+
+৮. 32:09 - Layout for shared component :
+            => pages folder এর sibling হিসেবে একটা components folder create করব যেখানে আমরা আমাদের সব গুলো component রাখব । এবার সেখানে আমকরা shared.js একটা file বানাব rsc দিয়ে Shared component create করব যা একটা props recieve করবে {children} নামের।
+            => এবার ধরা যাক আমকরা Header.js এবং Footer.js নামের পুর্বে create করেয়া 2 টা component কে shared করেতে চাই যাতে যেকোন component এদের পায় তার জন্য নিচের মত করে Shared component কে return করাতে হবে,
+                in Shared component,
+                            const Shared = ({children})=>{
+                                return (
+                                    <>
+                                        <Header></Header>
+                                        {children}
+                                        <Footer></Footer>
+                                    </>
+                                )
+                            }
+
+                in _app.js/MyApp component,
+                            const MyApp = ({Component,pageProps})=>{
+                                return (
+                                    <>
+                                        <Shared>
+                                            <Component {...pageProps} />
+                                        </Shared>
+                                    </>
+                                )
+                            }
+
+৯. 34:28 - Single Page Application (SPA) in NextJS : as poin t7
+
+১০.  37:28 - SEO Meta component as a shared component : 
+            => একটা Meta Shared component বানাতে হবে যেটা আমদের কে react এর Helmet library এর মত সাহায্য করবে পাশাপাশি এটা আমাদেরকে SEO related tags like Meta tags,metadata etc controll করতে সাহায্য করবে।
+                    structure like,
+                            import Head from "next/head"
+
+                            const Meta = ({title,keyword,description}) => {
+                                return (
+                                    <Head>
+                                        <title>{title}</title>
+                                        <meta charset="utf-8">
+                                        <meta http-equiv="X-UA-compatible" content="IE=edge" />
+                                        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                                        <meta name="description" content={description}/>
+                                        <meta name="keyword" content={keyword}/>
+                                    </Head>
+                                )
+                            }
+
+                            Meta.defaultProps = {
+                                title: "Default title related to website",
+                                keyword: "Default keyword related to website,Some tags are vital for SEO. Others have little or no impact on rankings. Here's every type of meta tag you need to know about.The purpose of a meta description is to reflect the essence of a page, but with more details and context.",
+                                description: "Default description related to website,Some tags are vital for SEO. Others have little or no impact on rankings. Here's every type of meta tag you need to know about.The purpose of a meta description is to reflect the essence of a page, but with more details and context.",
+                            }
+
+            => যদি কোন page এ Meta component use করতে ভুলে যায় এই defaultProps গুলো automatic থাকে 
+            => follow : pages/Meta.js
+            => এবার যেই যেই page এ এই Meta componetn কে use করব সেইসব component এ Meta component declaring এর সময় ৩টা props পাঠাতে হবে like allPosts.js file এ যদি Meta use করি তাহলে,
+                        
+                        <Meta title="All Posts" keyword="SEO Related KeywWords,SEO,Etc..." description="description.....,description..." />
+
+            => follow : pages/allPosts.js
+                        
+
+
+১১. 39:35 - API fetching by getServerSideProps :
+            => যদি কোন component এ API দিয়ে data fetch করা লাগে তাহলে দুই ধরনের props কে handle করতে হয় এদের মাঝে getServerSideProps একটি । এটা দিয়ে data কে live fetch করা হয়।
+            => যে component এ API দিয়ে data fetch করা লাগবে তার নিচে getServerSideProps function কে declare করে export করতে হুবে like,
+
+                        export const getServerSideProps = async () => {
+                            const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=20');
+                            const data = await res.json();
+
+                                /* Its a fixed format of return */
+                            return { props: { data } };
+                        }
+                        
+            => তবে এক্ষেত্রে fetch করে যে array of data পাব তাকে object হেসেবে props key এর value হিসেবে আরেকটা object হিসেবে return করতে হবে। নতুবা error দেখাবে।
+            => এবার কাংক্ষিত component এ props destructuring + maping করে output দেখাতে হবে
+            => follow : pages/allposts.js
+
+১২. 45:10 - API fetching by getServerSideProps এবং পাশাপাশি Dynamic Page Routing(II) : 
+            => এবার আমরা চাচ্ছি pages/allposts.js file এ mapping করে যে সব posts এনেছি তাদের কোন একটা তে click করলে আমাদের dynamic routing এর মাধ্যমে অন্য আরেকটা page/posts/[id].js/SinglePostsDetails file এ নিয়ে যাবে এর জন্য আমাদের pages/allposts.js file mapping করার সময় Link tag এর সাথে href & as attribute add করতে হবে like bellow,
+
+                        <Link href="/postsFolder/[id]" as={`/postsFolder/${id}`} key={id}>
+                                    <a className="card">
+                                        <h2>{title.slice(0,12)};</h2>
+                                        <p>{body.slice(0,50)}...</p>
+                                    </a>
+                        </Link>
+
+            => এবার page/posts/[id].js/ এ গিয়ে আমাদের আবার specific id এর against এ getServerSideProps function apply করতে হবে but এক্ষেত্রে আমদের এই function এর জন্য একটা parameter নিতে হবে context নামের এর পর এই id ধরে server এ API request দিতে হবে like,
+
+                            export const getServerSideProps = async (context) => {
+                                const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${context.params.id}`);
+                                const data = await res.json();
+
+                                /* Its a fixed format of return */
+                                return { props: { data } };
+                            }
+
+XX. 48:41 - API fetching by getStaticProps :
+            => getServerSideProps আর getStaticProps  দুটোই API fetching এ সাহায্য করে difference শুধু হচ্ছে, getStaticProps API fetching করে এনে automatically একটা HTML file create করে store করে রাখে machine এ এর পর dynamic routing এর সময় এই machine code গুলো কে provide করে again API কে hit করে না এবং dynamic file অর্থাৎ usersFolder/[id].js file টাতে আরেকটা function create করতে হবে getStaticPaths নামের.
+
+                        export const getStaticProps = async () => {
+                            const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=20');
+                            const data = await res.json();
+
+                                /* Its a fixed format of return */
+                            return { props: { data } };
+                        }
+                        
+            => তবে এক্ষেত্রে fetch করে যে array of data পাব তাকে object হেসেবে props key এর value হিসেবে আরেকটা object হিসেবে return করতে হবে। নতুবা error দেখাবে।
+            => এবার কাংক্ষিত component এ props destructuring + maping করে output দেখাতে হবে
+            => follow : pages/allposts.js
+
+১৩. 45:10 - API fetching by getStaticProps এবং পাশাপাশি Dynamic Page Routing(III) : 
+            => এবার আমরা চাচ্ছি pages/allUsers.js file এ mapping করে যে সব users এনেছি তাদের কোন একটা তে click করলে আমাদের dynamic routing এর মাধ্যমে অন্য আরেকটা page/usersFolder/[id].js/SingleUserDetails file এ নিয়ে যাবে এর জন্য আমাদের pages/allUsers.js file mapping করার সময় Link tag এর সাথে href & as attribute add করতে হবে like bellow,
+
+                        <Link href="/postsFolder/[id]" as={`/postsFolder/${id}`} key={id}>
+                                    <a className="card">
+                                        <h2>{title.slice(0,12)};</h2>
+                                        <p>{body.slice(0,50)}...</p>
+                                    </a>
+                        </Link>
+
+            => এবার page/usersFolder/[id].js/ এ গিয়ে আমাদের আবার specific id এর against এ getStaticProps function apply করতে হবে but এক্ষেত্রে আমদের এই function এর জন্য একটা parameter নিতে হবে context নামের এর পর এই id ধরে server এ API request দিতে হবে like,
+
+                            export const getStaticProps = async (context) => {
+                                const res = await fetch(`https://jsonplaceholder.typicode.com/users/${context.params.id}`);
+                                const data = await res.json();
+
+                                /* Its a fixed format of return */
+                                return { props: { data } };
+                            }
+
+            => এবার page/usersFolder/[id].js/ এ গিয়ে getStaticPaths function declare করতে হবে like,
+
+                            export const getStaticPaths = async () => {
+                                const res = await fetch(`https://jsonplaceholder.typicode.com/users`);
+                                const data = await res.json();
+                                const arrOfOnlyIds = data.map((user)=>user.id)
+
+                                /* Its a fixed format of return */
+                                const paths = arrOfOnlyIds.map((id)=>({params: {id: id.toString()}}))
+                                return { paths, fallback : false };
+                            }
+
+১৪. 57:34 - NextJS Build & Export (SSG in Build Time) :
+            => getStaticPaths function এর কাজ যেভাবে করে তা দেখার জন্য আমরা package.json এর script : "build": "next build" কে modify করে script : "build": "next build && next export" দিয়ে edit করব তারপর আবার serve কে রান দিব দেখব out নামের একটা folder সব গুলো API download হয়ে প্রতিটার জন্য একেক্টা HTML file generated হয়ে আছে । মুলত এখানে থেকে data গুলো নিয়ে নিয়ে getStaticPaths-getStaticProps কাজ করে
+
+১৫. 
+
+১৬. 
+
+১৭. 
+
+১৮. 
+
+১৯. 
+
+২০. 
+
+২১. 
+
+২২. 
+
+২৩. 
+
+২৪. 
+
+২৫. 
+
