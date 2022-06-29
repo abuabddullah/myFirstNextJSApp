@@ -7,7 +7,7 @@ const SingleUserDetails = ({ data }) => {
     return (
         <>
             <Meta />
-            <h1>getStaticPaths & getStaticProps</h1>
+            <h1>Powered by getStaticPaths & getStaticProps</h1>
             <h1>Here the User : {id}</h1>
             <article>
                 <h2>{name};</h2>

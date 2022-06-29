@@ -9,7 +9,7 @@ const SinglePostDetails = ({ data }) => {
     return (
         <>
             <Meta />
-            <h1>by getServerSideProps</h1>
+            <h1>Powered by getServerSideProps</h1>
             <h1>Here the post : {id}</h1>
             <article>
                 <h2>{title};</h2>

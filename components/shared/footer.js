@@ -2,9 +2,18 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <div>
-            <h1 style={{padding: "20px", background: "yellow"}}>footer</h1>
-        </div>
+        <footer className="footer">
+            <a
+                href="https://www.linkedin.com/in/asifaowadud"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Powered by{' '}
+                <span className="">
+                    Asif
+                </span>
+            </a>
+        </footer>
     );
 };
 
